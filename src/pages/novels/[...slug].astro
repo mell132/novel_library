@@ -1,0 +1,48 @@
+---
+// src/pages/novels/[...slug].astro
+import fs from 'fs';
+import path from 'path';
+
+export function getStaticPaths() {
+  const novelsDir = path.join(process.cwd(), 'src', 'novels');
+  let fileNames = [];
+  if (fs.existsSync(novelsDir)) {
+    fileNames = fs.readdirSync(novelsDir).filter(f => f.endsWith('.txt'));
+  } else {
+    console.error(`目录不存在: ${novelsDir}`);
+    return [];
+  }
+
+  return fileNames.map((fileName) => {
+    const slug = fileName.replace(/\.txt$/, '');
+    const filePath = path.join(novelsDir, fileName);
+    const content = fs.readFileSync(filePath, 'utf-8');
+    return {
+      params: { slug },
+      props: { content },
+    };
+  });
+}
+
+const { content } = Astro.props;
+const title = Astro.params.slug;
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title} - 小说库</title>
+  <style>
+    body { max-width: 800px; margin: 2rem auto; padding: 1rem; font-family: system-ui; line-height: 1.6; }
+    h1 { border-bottom: 2px solid #ccc; }
+    pre { white-space: pre-wrap; background: #f5f5f5; padding: 1rem; border-radius: 8px; }
+  </style>
+</head>
+<body data-pagefind-body>
+  <h1 data-pagefind-weight="10">{title}</h1>
+  <pre>{content}</pre>
+  <a href="/">← 返回列表</a>
+</body>
+</html>
