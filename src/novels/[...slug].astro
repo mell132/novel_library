@@ -1,0 +1,67 @@
+---
+// src/pages/novels/[...slug].astro
+// 获取所有 .txt 文件路径
+const txtFiles = import.meta.glob('../../novels/*.txt', { as: 'raw', eager: true });
+
+export function getStaticPaths() {
+  return Object.keys(txtFiles).map((filePath) => {
+    const fileName = filePath.split('/').pop().replace('.txt', '');
+    return {
+      params: { slug: fileName },
+      props: { content: txtFiles[filePath] },
+    };
+  });
+}
+
+const { content } = Astro.props;
+const title = Astro.params.slug;
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title} - 小说库</title>
+  <style>
+    body {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+      line-height: 1.6;
+      background-color: #faf9f8;
+      color: #1e1e1e;
+    }
+    h1 {
+      font-size: 1.8rem;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 0.5rem;
+    }
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1rem;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 2rem;
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1 data-pagefind-weight="10">{title}</h1>
+  <pre>{content}</pre>
+  <a href="/" class="back-link">← 返回小说列表</a>
+</body>
+</html>

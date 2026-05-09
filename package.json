@@ -7,12 +7,14 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && npx pagefind --source dist",
+    "build": "astro build && npx pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^6.2.2"
+    "@aws-sdk/client-s3": "^3.1045.0",
+    "astro": "^6.2.2",
+    "dotenv": "^17.4.2"
   },
   "devDependencies": {
     "pagefind": "^1.5.2"

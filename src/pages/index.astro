@@ -1,17 +1,60 @@
 ---
-
+// src/pages/index.astro
+const novels = Object.keys(import.meta.glob('../novels/*.txt')).map((path) => {
+  const name = path.split('/').pop().replace('.txt', '');
+  return { name, url: `/novels/${name}` };
+});
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小说库</title>
+  <style>
+    body {
+      max-width: 600px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+      font-family: system-ui, sans-serif;
+    }
+    h1 {
+      font-size: 2rem;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 0.75rem 0;
+    }
+    a {
+      font-size: 1.2rem;
+      text-decoration: none;
+      color: #0066cc;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .search-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      background: #f0f0f0;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📚 小说列表</h1>
+  <ul>
+    {novels.map((novel) => (
+      <li><a href={novel.url}>{novel.name}</a></li>
+    ))}
+  </ul>
+  <div>
+    <a href="/search" class="search-link">🔍 搜索全部小说</a>
+  </div>
+</body>
 </html>
