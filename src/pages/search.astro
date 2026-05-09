@@ -1,6 +1,5 @@
 ---
 // src/pages/search.astro
-// 引入 Pagefind 的 CSS 和 JS（构建后会自动生成在 /pagefind/ 下）
 const pagefindStyles = '/pagefind/pagefind-ui.css';
 const pagefindScript = '/pagefind/pagefind-ui.js';
 ---
@@ -14,39 +13,37 @@ const pagefindScript = '/pagefind/pagefind-ui.js';
   <link rel="stylesheet" href={pagefindStyles}>
   <style>
     body {
-      max-width: 900px;
+      max-width: 800px;
       margin: 2rem auto;
       padding: 0 1rem;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
+      font-family: system-ui, sans-serif;
     }
     #search {
       margin: 2rem 0;
-    }
-    .back-link {
-      display: inline-block;
-      margin-top: 2rem;
-      color: #0066cc;
-      text-decoration: none;
     }
   </style>
 </head>
 <body>
   <h1>🔍 搜索小说</h1>
   <div id="search"></div>
-  <a href="/" class="back-link">← 返回小说列表</a>
+  <a href="/">← 返回列表</a>
 
-  <script type="module">
-    import { PagefindUI } from '/pagefind/pagefind-ui.js';
-    
-    new PagefindUI({
-      element: "#search",
-      showImages: false,
-      showSubResults: false,
-      resetStyles: false
+  <!-- 1. 通过 script src 加载 pagefind UI（会暴露全局 PagefindUI） -->
+  <script src={pagefindScript}></script>
+  <!-- 2. 然后初始化 -->
+  <script>
+    // 等待 pagefind-ui.js 加载完成后执行
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof PagefindUI !== 'undefined') {
+        new PagefindUI({
+          element: "#search",
+          showImages: false,
+          showSubResults: false,
+          resetStyles: false
+        });
+      } else {
+        console.error('PagefindUI 未加载成功，请检查路径');
+      }
     });
   </script>
 </body>
